@@ -12,6 +12,9 @@ public class Screen {
 		this.screenName = screenName;
 	}
 
+	public Screen() {
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -27,5 +30,11 @@ public class Screen {
 	public void setScreenName(String screenName) {
 		this.screenName = screenName;
 	}
+
+	@Override
+	public String toString() {
+		return "Screen [id=" + id + ", screenName=" + screenName + "]";
+	}
+	
 
 }

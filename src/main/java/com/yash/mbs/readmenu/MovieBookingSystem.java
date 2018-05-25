@@ -1,4 +1,4 @@
-package com.yash.mbs.main;
+package com.yash.mbs.readmenu;
 
 import java.io.BufferedReader;
 import java.io.File;
