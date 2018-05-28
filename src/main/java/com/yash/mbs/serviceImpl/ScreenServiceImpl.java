@@ -3,18 +3,22 @@ package com.yash.mbs.serviceImpl;
 import java.io.FileNotFoundException;
 import java.util.List;
 
+import com.yash.mbs.dao.MapMovieScreenDao;
 import com.yash.mbs.dao.ScreenDao;
+import com.yash.mbs.daoImpl.MapMovieScreenDaoImpl;
 import com.yash.mbs.daoImpl.ScreenDaoImpl;
 import com.yash.mbs.exception.ScreenAlreadyExistException;
 import com.yash.mbs.exception.ScreenNameCannotBeEmptyException;
 import com.yash.mbs.exception.ScreenNameDoNotExistException;
 import com.yash.mbs.exception.ScreenSizeMoreThanThreeException;
+import com.yash.mbs.model.Movie;
 import com.yash.mbs.model.Screen;
 import com.yash.mbs.service.ScreenService;
 
 public class ScreenServiceImpl implements ScreenService {
 
 	private ScreenDao screenDao;
+	private MapMovieScreenDao mapMovieScreenDao;
 
 	public ScreenServiceImpl(ScreenDao screenDao) {
 		this.screenDao = screenDao;
@@ -89,6 +93,12 @@ public class ScreenServiceImpl implements ScreenService {
 			return fethchedScreen;
 		else
 			throw new ScreenNameDoNotExistException("No Screen present with this name");
+	}
+
+	public List<Movie> getAllMovie() throws FileNotFoundException {
+		mapMovieScreenDao= new MapMovieScreenDaoImpl();
+		mapMovieScreenDao.loadAllMovie();
+		return mapMovieScreenDao.loadAllMovie();
 	}
 
 }

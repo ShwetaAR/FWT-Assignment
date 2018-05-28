@@ -5,12 +5,21 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+/**
+ * 
+ * @author Shweta.baberia
+ *
+ *FileUtil class is used to readjson file and convertObjectToJson for all the modules.
+ *Its a common class for for all the modules.
+ */
 public class FileUtil {
+	
+
 
 	public static final String readJsonFile(String filepath) throws FileNotFoundException {
 
@@ -19,13 +28,8 @@ public class FileUtil {
 		String jsonStr = null;
 		try {
 			Object obj = parser.parse(new FileReader(filepath));
-			if(obj ==null){
-				return null;
-			}
 			jsonStr = mapperObj.writeValueAsString(obj);
-			if(jsonStr ==null){
-				return null;
-			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {

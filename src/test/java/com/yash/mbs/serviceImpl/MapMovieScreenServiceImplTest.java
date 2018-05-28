@@ -32,7 +32,7 @@ public class MapMovieScreenServiceImplTest {
 
 	@Test(expected = InvalidScreenException.class)
 	public void addMovieToScreen_WhenScreenNameDoesNotExist_ThrowInvalidScreenException() throws FileNotFoundException {
-		movieName = "razi";
+		movieName = "raazi";
 		screenName = "Screen2";
 		mapMovieScreenService.addMovieToScreen(movieName, screenName);
 
@@ -40,9 +40,9 @@ public class MapMovieScreenServiceImplTest {
 
 	@Test
 	public void addMovieToScreen_WhenScreenNameExist_AssignMovieToScreen() throws FileNotFoundException {
-		movieName = "raazi";
-		screenName = "screen1";
-		loadAllMovie_WhenLoadAllMovieCalled_ReturnListOfMovie(movieScreenAssoiciationDao);
+		movieName = "movie2";
+		screenName = "screen23";
+		//loadAllMovie_WhenLoadAllMovieCalled_ReturnListOfMovie(movieScreenAssoiciationDao);
 		assertEquals(1, mapMovieScreenService.addMovieToScreen(movieName, screenName));
 
 	}
@@ -56,15 +56,15 @@ public class MapMovieScreenServiceImplTest {
 	 */
 	private void loadAllMovie_WhenLoadAllMovieCalled_ReturnListOfMovie(MapMovieScreenDao movieScreenAssoiciationDao) {
 		when(movieScreenAssoiciationDao.loadAllMovie()).thenReturn(Arrays.asList(
-				new Movie(1, "Raazi", Time.valueOf("02:00:00"), Arrays.asList("aliabhat,coactor"), "Bhat"),
-				new Movie(2, "Dear ZIndagi", Time.valueOf("02:30:00"), Arrays.asList("aliabhat,Sharukh"),
+				new Movie(1, "Raazi", "02:00:00", Arrays.asList("aliabhat,coactor"), "Bhat"),
+				new Movie(2, "Dear ZIndagi", "02:30:00", Arrays.asList("aliabhat,Sharukh"),
 						"productionnamne")));
 	}
 
 	@Test(expected = InvalidMovieException.class)
 	public void addMovieToScreen_WhenMovieNameDoNotExist_ThrowInvalidMovieException() throws FileNotFoundException {
 		movieName = "Dear Zindagi";
-		screenName = "screen2";
+		screenName = "screen1";
 		loadAllMovie_WhenLoadAllMovieCalled_ReturnListOfMovie(movieScreenAssoiciationDao);
 
 		mapMovieScreenService.addMovieToScreen(movieName, screenName);
@@ -73,9 +73,8 @@ public class MapMovieScreenServiceImplTest {
 
 	@Test
 	public void addMovieToScreen_WhenBothMovieScreenExist_InsertMovieToScreen() throws FileNotFoundException {
-		movieName = "Zindagi";
-		screenName = "auxdi3";
-		// loadAllMovie_WhenLoadAllMovieCalled_ReturnListOfMovie(movieScreenAssoiciationDao);
+		movieName = "Movie2";
+		screenName = "screen23";
 
 		mapMovieScreenService.addMovieToScreen(movieName, screenName);
 

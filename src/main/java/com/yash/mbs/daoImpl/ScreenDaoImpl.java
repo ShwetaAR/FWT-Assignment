@@ -2,6 +2,7 @@ package com.yash.mbs.daoImpl;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.w3c.dom.stylesheets.LinkStyle;
@@ -28,28 +29,26 @@ public class ScreenDaoImpl implements ScreenDao {
 		filepath = "src/main/resources/json/listOfScreen.json";
 		int inserted = 1;
 		List<Screen> listOfAllScreen = loadAllScreen();
-		if(listOfAllScreen.isEmpty()||listOfAllScreen==null){
+		if (listOfAllScreen.isEmpty() || listOfAllScreen == null) {
 			String json = gson.toJson(screen);
-		}
-		else
-		listOfAllScreen.add(screen);
+		} else
+			listOfAllScreen.add(screen);
 		String json = gson.toJson(listOfAllScreen);
 		FileUtil.convertObjectToJson(json, filepath);
 		return inserted;
 
 	}
 
-	public List<Screen> loadAllScreen()  {
-		List<Screen> participantJsonList = null;
+	public List<Screen> loadAllScreen() {
+		List<Screen> jsonList = null;
 		ObjectMapper mapperObj = new ObjectMapper();
 		filepath = "src/main/resources/json/listOfScreen.json";
 		try {
-		String jsonString = FileUtil.readJsonFile(filepath);
-		if(jsonString==null){
-			return null;
-		}
-			participantJsonList = mapperObj.readValue(jsonString, new TypeReference<List<Screen>>() {
+			String jsonString = FileUtil.readJsonFile(filepath);
+
+			jsonList = mapperObj.readValue(jsonString, new TypeReference<List<Screen>>() {
 			});
+
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -57,7 +56,7 @@ public class ScreenDaoImpl implements ScreenDao {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return participantJsonList;
+		return jsonList;
 	}
 
 }

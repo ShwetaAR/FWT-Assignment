@@ -20,6 +20,7 @@ public class MapMovieScreenDaoImpl implements MapMovieScreenDao {
 
 	private Gson gsonObj;
 	private ObjectMapper mapperObj;
+	private String filePath;
 
 	public MapMovieScreenDaoImpl() {
 		mapperObj = new ObjectMapper();
@@ -27,39 +28,41 @@ public class MapMovieScreenDaoImpl implements MapMovieScreenDao {
 	}
 
 	public List<MapMovieScreen> loadMovieToScreen() {
-
+		List<MapMovieScreen> jsonList = null;
 		String filePath = "src/main/resources/json/listOfMovieScreenMapping.json";
-		List<MapMovieScreen> mapMovieScreen = null;
-		mapMovieScreen = convertJsonFileToMapMovieScreenObject(filePath, mapMovieScreen);
-		return mapMovieScreen;
-
-	}
-
-	private List<MapMovieScreen> convertJsonFileToMapMovieScreenObject(String filePath,
-			List<MapMovieScreen> mapMovieScreen) {
+		String jsonString;
 		try {
-			String jsonString = FileUtil.readJsonFile(filePath);
-			MapMovieScreen[] jsonFile = gsonObj.fromJson(jsonString, MapMovieScreen[].class);
-			mapMovieScreen = Arrays.asList(jsonFile);
+			jsonString = FileUtil.readJsonFile(filePath);
+			jsonList = mapperObj.readValue(jsonString, new TypeReference<List<MapMovieScreen>>() {
+			});
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return mapMovieScreen;
+		return jsonList;
+
 	}
 
-	public int insertMovieToScreen(Movie movie, Screen screen) {
-		int id = 0;
-		List<MapMovieScreen> listOfAllMovieScreen = loadMovieToScreen();
-		for (MapMovieScreen mapMovieToScreen : listOfAllMovieScreen) {
-			id += mapMovieToScreen.getId();
-		}
-		listOfAllMovieScreen.add(new MapMovieScreen(id, movie, screen));
 
-		int inserted = 1;
-		String json = gsonObj.toJson(listOfAllMovieScreen);
-		String filePath = "src/main/resources/json/listOfMovieScreenMapping.json";
+	public int insertMovieToScreen(Movie movie, Screen screen) {
+		filePath = "src/main/resources/json/listOfMovieScreenMapping.json";
+		int id=12;
+		int inserted=1;
+		List<MapMovieScreen> listOfAllScreenMovie = loadMovieToScreen();
+		if (listOfAllScreenMovie.isEmpty() || listOfAllScreenMovie == null) {
+			String json = gsonObj.toJson(new MapMovieScreen(id, movie, screen));
+		} else
+			listOfAllScreenMovie.add(new MapMovieScreen(id, movie, screen));
+		id++;
+		String json = gsonObj.toJson(listOfAllScreenMovie);
 		FileUtil.convertObjectToJson(json, filePath);
 		return inserted;
+	
 
 	}
 

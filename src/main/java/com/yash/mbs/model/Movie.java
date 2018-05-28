@@ -8,11 +8,11 @@ public class Movie {
 
 	private int id;
 	private String title;
-	private Time duration;
+	private String duration;
 	private List<String> actors;
 	private String production;
 
-	public Movie(int id, String title, Time duration, List<String> actors, String production) {
+	public Movie(int id, String title, String duration, List<String> actors, String production) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -32,7 +32,7 @@ public class Movie {
 		return title;
 	}
 
-	public Time getDuration() {
+	public String getDuration() {
 		return duration;
 	}
 

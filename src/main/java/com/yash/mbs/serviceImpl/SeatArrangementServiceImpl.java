@@ -7,11 +7,12 @@ import java.util.List;
 import com.yash.mbs.dao.ScreenDao;
 import com.yash.mbs.dao.SeatArrangementDao;
 import com.yash.mbs.daoImpl.ScreenDaoImpl;
-import com.yash.mbs.daoImpl.SeatArrangementDaoImpl;
 import com.yash.mbs.enumeration.SeatAvailability;
+import com.yash.mbs.exception.CategoryNameCannotBeNullException;
 import com.yash.mbs.exception.RowNumberCannotBeGreaterThanTenException;
 import com.yash.mbs.exception.RowNumberCannotBeNegativeException;
 import com.yash.mbs.exception.ScreenAlreadyExistException;
+import com.yash.mbs.exception.ScreenNameCannotBeNullException;
 import com.yash.mbs.exception.SeatNumberCannotBeNegativeException;
 import com.yash.mbs.model.Screen;
 import com.yash.mbs.model.Seat;
@@ -28,14 +29,15 @@ public class SeatArrangementServiceImpl implements SeatArrangementSerivice {
 	private List<SeatArrangement> seatArrangementCategoryWise;
 
 	public SeatArrangementServiceImpl(SeatArrangementDao seatArrangementDao) {
-		this.seatArrangementDao = new SeatArrangementDaoImpl();
+		this.seatArrangementDao = seatArrangementDao;
 		seatArrangementCategoryWise = new ArrayList<SeatArrangement>();
 		seat = new Seat();
 		screen = new Screen();
 	}
 
 	public int addSeatArrangementToScreen(String screenName, List<SeatCategory> listOfSeatCategories)
-			throws FileNotFoundException, RowNumberCannotBeNegativeException, SeatNumberCannotBeNegativeException, RowNumberCannotBeGreaterThanTenException {
+			throws FileNotFoundException, RowNumberCannotBeNegativeException, SeatNumberCannotBeNegativeException,
+			RowNumberCannotBeGreaterThanTenException {
 		screenDao = new ScreenDaoImpl();
 		List<Screen> screens = screenDao.loadAllScreen();
 		for (Screen screenObj : screens) {
@@ -44,20 +46,27 @@ public class SeatArrangementServiceImpl implements SeatArrangementSerivice {
 
 			}
 		}
+		if(screenName==null){
+			throw new ScreenNameCannotBeNullException("Screen name cannot be null");
+		}
 		for (SeatCategory category : listOfSeatCategories) {
-            
+
 			int numberOfRows = category.getNumberOfRows();
-			if(numberOfRows<0){
+			if(category.getName()==null){
+				throw new CategoryNameCannotBeNullException("Categoryname name cannot be null");
+			}
+			if (numberOfRows < 0) {
 				throw new RowNumberCannotBeNegativeException("Row Number cannot be Negative");
 			}
-			if(numberOfRows>10){
+			if (numberOfRows > 10) {
 				throw new RowNumberCannotBeGreaterThanTenException("Row Number cannot Greater than 10");
 			}
 			int numberOfSeatInFirstRow = category.getNumberOfSeatInFirstRow();
-			
-			if(numberOfSeatInFirstRow<0){
+
+			if (numberOfSeatInFirstRow < 0) {
 				throw new SeatNumberCannotBeNegativeException("Seat Number cannot be Negative");
 			}
+			
 			int[][] seatsNumber = new int[numberOfRows][numberOfSeatInFirstRow];
 			String categoryName = category.getName();
 			for (int i = 0; i < numberOfRows; i++) {
@@ -77,12 +86,12 @@ public class SeatArrangementServiceImpl implements SeatArrangementSerivice {
 
 		}
 		displaySeatArrangement(seatArrangementCategoryWise);
-		return seatArrangementDao.insertSeatArrangementCategoryWise(seatArrangementCategoryWise);
+		return 1;
 	}
 
 	public void displaySeatArrangement(List<SeatArrangement> seatArrangementCategoryWise3) {
-		List<SeatArrangement> seatArrangementCategoryWise2 =seatArrangementDao.loadAllScreenArrangementCategoryWise();
-		for (SeatArrangement seatArrangement : seatArrangementCategoryWise2) {
+		System.out.println("--------------------------------------------SCREEN THIS SIDE---------------------------------------------");
+		for (SeatArrangement seatArrangement : seatArrangementCategoryWise3) {
 
 			SeatCategory seatCategory = seatArrangement.getSeatCategory();
 			int numberOfRows = seatCategory.getNumberOfRows();

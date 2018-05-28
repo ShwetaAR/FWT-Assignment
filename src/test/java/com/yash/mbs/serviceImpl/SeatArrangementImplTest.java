@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.yash.mbs.dao.ScreenDao;
 import com.yash.mbs.dao.SeatArrangementDao;
+import com.yash.mbs.exception.CategoryNameCannotBeNullException;
 import com.yash.mbs.exception.RowNumberCannotBeGreaterThanTenException;
 import com.yash.mbs.exception.RowNumberCannotBeNegativeException;
 import com.yash.mbs.exception.SeatNumberCannotBeNegativeException;
@@ -23,14 +24,15 @@ public class SeatArrangementImplTest {
 
 	@Test
 	public void addSeatArrangementToScreen_WhenScreenNameAndCategoryGiven_ShouldCreateSeatArrangement()
-			throws FileNotFoundException, RowNumberCannotBeNegativeException, SeatNumberCannotBeNegativeException, RowNumberCannotBeGreaterThanTenException {
+			throws FileNotFoundException, RowNumberCannotBeNegativeException, SeatNumberCannotBeNegativeException,
+			RowNumberCannotBeGreaterThanTenException {
 		SeatArrangementDao seatArrangementDao = mock(SeatArrangementDao.class);
 		SeatArrangementSerivice seatArrangementService = new SeatArrangementServiceImpl(seatArrangementDao);
 		String screenName = "screen1";
 		List<SeatCategory> listOfSeatCategories = new ArrayList<SeatCategory>();
 		listOfSeatCategories.add(new SeatCategory(1, "primium", 5, 20));
 		listOfSeatCategories.add(new SeatCategory(2, "silver", 6, 12));
-		//when(seatArrangementDao.insertSeatArrangementCategoryWise(null)).thenReturn(1);
+		when(seatArrangementDao.insertSeatArrangementCategoryWise(listOfSeatCategories)).thenReturn(1);
 		int seatArrangement = seatArrangementService.addSeatArrangementToScreen(screenName, listOfSeatCategories);
 		assertEquals(1, seatArrangement);
 
@@ -48,7 +50,6 @@ public class SeatArrangementImplTest {
 		seatArrangementService.addSeatArrangementToScreen(screenName, listOfSeatCategories);
 
 	}
-	
 
 	@Test(expected = SeatNumberCannotBeNegativeException.class)
 	public void addSeatArrangementToScreen_WhenNumberOfSeatInFirstRowIsNegtive_ThrowSeatNumberCannotBeNegativeException()
@@ -62,35 +63,33 @@ public class SeatArrangementImplTest {
 		seatArrangementService.addSeatArrangementToScreen(screenName, listOfSeatCategories);
 
 	}
-	
-	@Test(expected = NullPointerException.class)
+
+	@Test(expected = CategoryNameCannotBeNullException.class)
 	public void addSeatArrangementToScreen_WhenScreenNameIsNull_NullPointerException()
-			throws Exception {
+			throws FileNotFoundException, RowNumberCannotBeNegativeException, SeatNumberCannotBeNegativeException,
+			RowNumberCannotBeGreaterThanTenException {
 		SeatArrangementDao seatArrangementDao = mock(SeatArrangementDao.class);
 		SeatArrangementSerivice seatArrangementService = new SeatArrangementServiceImpl(seatArrangementDao);
 		String screenName = "screen1";
-		String categoryname = null ;
+		String categoryname = null;
 		List<SeatCategory> listOfSeatCategories = new ArrayList<SeatCategory>();
-		listOfSeatCategories.add(new SeatCategory(1,categoryname, 5, -10));
-		listOfSeatCategories.add(new SeatCategory(2,categoryname, 6, -12));
+		listOfSeatCategories.add(new SeatCategory(1, categoryname, 5, 10));
+		listOfSeatCategories.add(new SeatCategory(2, categoryname, 6, 10));
 		seatArrangementService.addSeatArrangementToScreen(screenName, listOfSeatCategories);
 
 	}
-	
+
 	@Test(expected = RowNumberCannotBeGreaterThanTenException.class)
 	public void addSeatArrangementToScreen_WhenScreenNameIsNull_RowNumberCannotBeGreaterThanTenException()
 			throws Exception {
 		SeatArrangementDao seatArrangementDao = mock(SeatArrangementDao.class);
 		SeatArrangementSerivice seatArrangementService = new SeatArrangementServiceImpl(seatArrangementDao);
 		String screenName = "screen1";
-		String categoryname = null ;
 		List<SeatCategory> listOfSeatCategories = new ArrayList<SeatCategory>();
-		listOfSeatCategories.add(new SeatCategory(1,categoryname, 11, -10));
-		listOfSeatCategories.add(new SeatCategory(2,categoryname,12, -12));
+		listOfSeatCategories.add(new SeatCategory(1, "primium", 11, 10));
+		listOfSeatCategories.add(new SeatCategory(2, "silver", 12, 12));
 		seatArrangementService.addSeatArrangementToScreen(screenName, listOfSeatCategories);
 
 	}
-	
-
 
 }

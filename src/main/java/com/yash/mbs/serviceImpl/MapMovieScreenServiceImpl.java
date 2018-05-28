@@ -76,12 +76,11 @@ public class MapMovieScreenServiceImpl implements MapMovieScreenService {
 			mapMovieScreenDao = new MapMovieScreenDaoImpl();
 			List<MapMovieScreen> existingMovieScreen = mapMovieScreenDao.loadMovieToScreen();
 			for (MapMovieScreen mapMovieScreen : existingMovieScreen) {
-				System.out.println(mapMovieScreen.getMovie().getTitle() + "givane name-->" + movie.getTitle());
-				System.out.println(
-						mapMovieScreen.getScreen().getScreenName() + "givane name-->" + screen.getScreenName());
+
 				if (mapMovieScreen.getMovie().getTitle().equalsIgnoreCase(movie.getTitle())
 						&& mapMovieScreen.getScreen().getScreenName().equalsIgnoreCase(screen.getScreenName())) {
 					inserted = 0;
+					break;
 				}
 			}
 			if (inserted == 1) {

@@ -48,19 +48,13 @@ public class ScreenServiceImplTest {
 	@Test(expected = ScreenSizeMoreThanThreeException.class)
 	public void addScreen_WhenScreenSizeMoreThanThree_ThrowScreenSizeMoreThanThreeException()
 			throws ScreenNameCannotBeEmptyException, ScreenAlreadyExistException, FileNotFoundException {
-
-		when(screenDao.loadAllScreen())
-				.thenReturn(Arrays.asList(new Screen(12, "audi1"), new Screen(13, "audi2"), new Screen(14, "audi3")));
-		screenService.addScreen(new Screen(1, "Screen1"));
+		screenService.addScreen(new Screen(1, "Screen0"));
 
 	}
 
 	@Test
 	public void addScreen_WhenValidScreenObjectGivenAsInput_ShouldBeAdded()
 			throws ScreenNameCannotBeEmptyException, ScreenAlreadyExistException, FileNotFoundException {
-		// when(screenDao.loadAllScreen()).thenReturn(Arrays.asList(new
-		// Screen(12, "audi1"), new Screen(13, "audi2")));
-		// when(screenDao.insertScreen(new Screen(4, "audi3"))).thenReturn(1);
 		assertEquals(1, screenService.addScreen(new Screen(5, "auxdi4")));
 
 	}
@@ -68,8 +62,6 @@ public class ScreenServiceImplTest {
 	@Test(expected = ScreenAlreadyExistException.class)
 	public void addScreen_WhenExistingScreenGivenAsInput_ShouldNotBeAdded()
 			throws ScreenAlreadyExistException, ScreenNameCannotBeEmptyException, FileNotFoundException {
-		when(screenDao.loadAllScreen()).thenReturn(Arrays.asList(new Screen(12, "screen1"), new Screen(13, "audi2")));
-		when(screenDao.insertScreen(new Screen(1, "Screen1"))).thenReturn(0);
 		assertEquals(0, screenService.addScreen(new Screen(1, "Screen1")));
 
 	}

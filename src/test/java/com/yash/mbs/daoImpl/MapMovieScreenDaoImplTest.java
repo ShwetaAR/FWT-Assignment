@@ -1,8 +1,10 @@
 package com.yash.mbs.daoImpl;
 
+import static org.junit.Assert.assertEquals;
+
 import java.sql.Time;
 import java.util.Arrays;
-import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,6 +15,8 @@ import com.yash.mbs.model.Screen;
 public class MapMovieScreenDaoImplTest {
 
 	private MapMovieScreenDao mapMovieScreenDao;
+	private Movie movie;
+	private Screen screen;
 
 	@Before
 	public void setUp() {
@@ -22,8 +26,8 @@ public class MapMovieScreenDaoImplTest {
 	@Test
 	public void insertMovieToScreen_WhenScreenAndMovieExist_InsertMovieToScreen() {
 		MapMovieScreenDao mapMovieScreenDao = new MapMovieScreenDaoImpl();
-		Movie movie = new Movie(2, "Dear Zindagi", Time.valueOf("02:00:00"), Arrays.asList("aliabhat,coactor"), "Bhat");
-		Screen screen = new Screen(11, "screen2");
+		movie = new Movie(2, "Dear Zindagi", "02:00:00", Arrays.asList("aliabhat,coactor"), "Bhat");
+		screen = new Screen(11, "screen2");
 		mapMovieScreenDao.loadMovieToScreen();
 
 	}

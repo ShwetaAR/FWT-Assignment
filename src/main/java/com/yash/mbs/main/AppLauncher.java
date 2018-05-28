@@ -5,8 +5,11 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
+import com.yash.mbs.exception.RowNumberCannotBeGreaterThanTenException;
+import com.yash.mbs.exception.RowNumberCannotBeNegativeException;
 import com.yash.mbs.exception.ScreenAlreadyExistException;
 import com.yash.mbs.exception.ScreenNameCannotBeEmptyException;
+import com.yash.mbs.exception.SeatNumberCannotBeNegativeException;
 import com.yash.mbs.readmenu.MovieBookingSystem;
 
 
@@ -18,6 +21,7 @@ import com.yash.mbs.readmenu.MovieBookingSystem;
  */
 public class AppLauncher {
 	
+	
 	/**
 	 * Application will start from here
 	 * 
@@ -25,11 +29,13 @@ public class AppLauncher {
 	 * @throws IOException 
 	 * @throws ScreenAlreadyExistException 
 	 * @throws ScreenNameCannotBeEmptyException 
+	 * @throws RowNumberCannotBeGreaterThanTenException 
+	 * @throws SeatNumberCannotBeNegativeException 
+	 * @throws RowNumberCannotBeNegativeException 
 	 */
-	public static void main(String[] args) throws IOException, ScreenNameCannotBeEmptyException, ScreenAlreadyExistException {
+	public static void main(String[] args) throws IOException, ScreenNameCannotBeEmptyException, ScreenAlreadyExistException, RowNumberCannotBeNegativeException, SeatNumberCannotBeNegativeException, RowNumberCannotBeGreaterThanTenException {
 		MovieBookingSystem movieBookingSystem = new MovieBookingSystem();
-		File file = new File("src/main/resources/menu/OperatorsMenu.txt");
-		movieBookingSystem.getMenu(file);
+		movieBookingSystem.getMovieBookingSystemMenu();
 		
 	}
 
