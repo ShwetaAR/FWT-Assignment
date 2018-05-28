@@ -9,7 +9,7 @@ public interface ScreenDao {
 
 	public int insertScreen(Screen screen) throws FileNotFoundException;
 
-	List<Screen> loadAllScreen() throws FileNotFoundException;
+	public List<Screen> loadAllScreen() throws FileNotFoundException;
 
 
 

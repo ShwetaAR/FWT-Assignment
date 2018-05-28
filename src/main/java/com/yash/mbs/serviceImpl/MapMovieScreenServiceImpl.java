@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.yash.mbs.dao.MapMovieScreenDao;
 import com.yash.mbs.dao.ScreenDao;
+import com.yash.mbs.daoImpl.MapMovieScreenDaoImpl;
 import com.yash.mbs.daoImpl.ScreenDaoImpl;
 import com.yash.mbs.exception.InvalidMovieException;
 import com.yash.mbs.exception.InvalidScreenException;
@@ -28,11 +29,31 @@ public class MapMovieScreenServiceImpl implements MapMovieScreenService {
 	}
 
 	public int addMovieToScreen(String movieName, String screenName) throws FileNotFoundException {
-		
+		mapMovieScreenDao = new MapMovieScreenDaoImpl();
 		List<Movie> movies = mapMovieScreenDao.loadAllMovie();
-		boolean doMovieExist = false;
+
 		int inserted = 1;
 		int notInserted = 0;
+		boolean doScreenExist = doScreenExist(screenName);
+		boolean doMovieExist = doesMovieExist(movieName, movies);
+		checkIfScreenAndMovieExist(doMovieExist, doScreenExist);
+		return insertForValidScreenAndMovie(movie, doMovieExist, inserted, notInserted, screen, doScreenExist);
+
+	}
+
+	private boolean doesMovieExist(String movieName, List<Movie> movies) {
+		boolean doMovieExist = false;
+		for (Movie movieObj : movies) {
+			if (movieObj.getTitle().equalsIgnoreCase(movieName)) {
+				doMovieExist = true;
+				movie = movieObj;
+				break;
+			}
+		}
+		return doMovieExist;
+	}
+
+	private boolean doScreenExist(String screenName) throws FileNotFoundException {
 		List<Screen> screens = screenDao.loadAllScreen();
 		boolean doScreenExist = false;
 		for (Screen screenObj : screens) {
@@ -42,16 +63,7 @@ public class MapMovieScreenServiceImpl implements MapMovieScreenService {
 				break;
 			}
 		}
-		for (Movie movieObj : movies) {
-			if (movieObj.getTitle().equalsIgnoreCase(movieName)) {
-				doMovieExist = true;
-				movie = movieObj;
-				break;
-			}
-		}
-		checkIfScreenAndMovieExist(doMovieExist, doScreenExist);
-		return insertForValidScreenAndMovie(movie, doMovieExist, inserted, notInserted, screen, doScreenExist);
-
+		return doScreenExist;
 	}
 
 	private int insertForValidScreenAndMovie(Movie movie, boolean doMovieExist, int inserted, int notInserted,
@@ -61,15 +73,19 @@ public class MapMovieScreenServiceImpl implements MapMovieScreenService {
 		} else if (!doMovieExist) {
 			throw new InvalidMovieException("Movie Do not  Exist ");
 		} else {
+			mapMovieScreenDao = new MapMovieScreenDaoImpl();
 			List<MapMovieScreen> existingMovieScreen = mapMovieScreenDao.loadMovieToScreen();
 			for (MapMovieScreen mapMovieScreen : existingMovieScreen) {
+				System.out.println(mapMovieScreen.getMovie().getTitle() + "givane name-->" + movie.getTitle());
+				System.out.println(
+						mapMovieScreen.getScreen().getScreenName() + "givane name-->" + screen.getScreenName());
 				if (mapMovieScreen.getMovie().getTitle().equalsIgnoreCase(movie.getTitle())
 						&& mapMovieScreen.getScreen().getScreenName().equalsIgnoreCase(screen.getScreenName())) {
 					inserted = 0;
 				}
 			}
 			if (inserted == 1) {
-
+				mapMovieScreenDao = new MapMovieScreenDaoImpl();
 				return mapMovieScreenDao.insertMovieToScreen(movie, screen);
 			} else
 

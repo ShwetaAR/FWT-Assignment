@@ -9,11 +9,11 @@ import com.yash.mbs.model.Screen;
 
 public interface MapMovieScreenDao {
 
-	List<MapMovieScreen> loadMovieToScreen();
+	public List<MapMovieScreen> loadMovieToScreen();
 
-	int  insertMovieToScreen(Movie movie, Screen screen);
+	public int  insertMovieToScreen(Movie movie, Screen screen);
 
-	List<Movie> loadAllMovie();
+	public List<Movie> loadAllMovie();
 
 	
 

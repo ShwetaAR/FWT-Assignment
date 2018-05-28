@@ -4,8 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.json.simple.parser.JSONParser;
+import org.w3c.dom.stylesheets.LinkStyle;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,42 +17,37 @@ import com.yash.mbs.util.FileUtil;
 
 public class ScreenDaoImpl implements ScreenDao {
 
-	
+	private Gson gson;
+	private String filepath;
+
+	public ScreenDaoImpl() {
+		gson = new Gson();
+	}
+
 	public int insertScreen(Screen screen) throws FileNotFoundException {
-
-		boolean doScreenExist = false;
-		Gson gson = new Gson();
-		List<Screen> listOfAllScreen = loadAllScreen();
-		for (Screen existingScreen : listOfAllScreen) {
-			if (screen.getScreenName().equalsIgnoreCase(existingScreen.getScreenName())) {
-				doScreenExist = true;
-			}
-		}
-		return insertScreenIfSizeLessThanThreeAndNotExistAlready(screen, doScreenExist, gson, listOfAllScreen);
-
-	}
-
-	private int insertScreenIfSizeLessThanThreeAndNotExistAlready(Screen screen, boolean doScreenExist, Gson gson,
-			List<Screen> listOfAllScreen) {
+		filepath = "src/main/resources/json/listOfScreen.json";
 		int inserted = 1;
-		String filepath = "src/main/resources/json/listOfScreen.json";
-		int notInserted = 0;
-		if (!doScreenExist && listOfAllScreen.size() < 3) {
-			listOfAllScreen.add(screen);
-			String json = gson.toJson(listOfAllScreen);
-			FileUtil.convertObjectToJson(json, filepath);
-			return inserted;
-		} else
-			return notInserted;
+		List<Screen> listOfAllScreen = loadAllScreen();
+		if(listOfAllScreen.isEmpty()||listOfAllScreen==null){
+			String json = gson.toJson(screen);
+		}
+		else
+		listOfAllScreen.add(screen);
+		String json = gson.toJson(listOfAllScreen);
+		FileUtil.convertObjectToJson(json, filepath);
+		return inserted;
 
 	}
 
-	public List<Screen> loadAllScreen() throws FileNotFoundException {
+	public List<Screen> loadAllScreen()  {
 		List<Screen> participantJsonList = null;
 		ObjectMapper mapperObj = new ObjectMapper();
-		String filePath = "src/main/resources/json/listOfScreen.json";
-		String jsonString = FileUtil.readJsonFile(filePath);
+		filepath = "src/main/resources/json/listOfScreen.json";
 		try {
+		String jsonString = FileUtil.readJsonFile(filepath);
+		if(jsonString==null){
+			return null;
+		}
 			participantJsonList = mapperObj.readValue(jsonString, new TypeReference<List<Screen>>() {
 			});
 		} catch (JsonParseException e) {

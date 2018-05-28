@@ -13,24 +13,28 @@ import org.junit.Test;
 import com.yash.mbs.dao.ScreenDao;
 import com.yash.mbs.exception.ScreenAlreadyExistException;
 import com.yash.mbs.exception.ScreenNameCannotBeEmptyException;
+import com.yash.mbs.exception.ScreenSizeMoreThanThreeException;
 import com.yash.mbs.model.Screen;
 import com.yash.mbs.service.ScreenService;
 
 public class ScreenServiceImplTest {
-	
+
 	private ScreenDao screenDao;
-	private ScreenService screenService ;
+	private ScreenService screenService;
+	private Screen screen;
 
 	@Before
 	public void setUp() {
-		 screenDao = mock(ScreenDao.class);
-		 screenService = new ScreenServiceImpl(screenDao);
+		screenDao = mock(ScreenDao.class);
+		screenService = new ScreenServiceImpl(screenDao);
+		screen = new Screen();
+
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void addScreen_WhenSetOfScreenIsNULL_ThrowNullPointerException()
 			throws ScreenNameCannotBeEmptyException, ScreenAlreadyExistException, FileNotFoundException {
-		Screen screen = null;
+		screen = null;
 		screenService.addScreen(screen);
 	}
 
@@ -41,12 +45,23 @@ public class ScreenServiceImplTest {
 
 	}
 
+	@Test(expected = ScreenSizeMoreThanThreeException.class)
+	public void addScreen_WhenScreenSizeMoreThanThree_ThrowScreenSizeMoreThanThreeException()
+			throws ScreenNameCannotBeEmptyException, ScreenAlreadyExistException, FileNotFoundException {
+
+		when(screenDao.loadAllScreen())
+				.thenReturn(Arrays.asList(new Screen(12, "audi1"), new Screen(13, "audi2"), new Screen(14, "audi3")));
+		screenService.addScreen(new Screen(1, "Screen1"));
+
+	}
+
 	@Test
 	public void addScreen_WhenValidScreenObjectGivenAsInput_ShouldBeAdded()
 			throws ScreenNameCannotBeEmptyException, ScreenAlreadyExistException, FileNotFoundException {
-		when(screenDao.loadAllScreen()).thenReturn(Arrays.asList(new Screen(12, "audi1"), new Screen(13, "audi2")));
-		when(screenDao.insertScreen(new Screen(1, "Screen1"))).thenReturn(1);
-		assertEquals(1, screenService.addScreen(new Screen(1, "Screen1")));
+		// when(screenDao.loadAllScreen()).thenReturn(Arrays.asList(new
+		// Screen(12, "audi1"), new Screen(13, "audi2")));
+		// when(screenDao.insertScreen(new Screen(4, "audi3"))).thenReturn(1);
+		assertEquals(1, screenService.addScreen(new Screen(5, "auxdi4")));
 
 	}
 
